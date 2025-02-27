@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>bill</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <script src="script.js">
+    <script src="app.js"></script>
 
-            gmghfhnh,hzdnh
+    <h1>Bill Splitter</h1>
 
-    </script>
-    <p>the issss</p>
+    <!-- Group Creation -->
+    <div>
+        <input type="text" id="groupName" placeholder="Enter group name">
+        <button onclick="createGroup()">Create Group</button>
+    </div>
+
+    <!-- Member Management -->
+    <div>
+        <input type="text" id="memberName" placeholder="Enter member name">
+        <button onclick="addMember()">Add Member</button>
+        <button onclick="removeMember()">Remove Member</button>
+    </div>
+
+    <!-- Expense Input -->
+    <div>
+        <input type="number" id="expenseAmount" placeholder="Enter amount">
+        <select id="payer"></select>
+        <button onclick="addExpense()">Add Expense</button>
+    </div>
+
+    <!-- Balance Sheet -->
+    <h2>Balance Sheet</h2>
+    <ul id="balanceList"></ul>
 </body>
+
 </html>
