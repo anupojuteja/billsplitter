@@ -10,18 +10,34 @@
 
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
         <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center"></h1>
-        <input id="participantName" type="text" placeholder="Enter Participant Name" 
-               class="w-full border p-2 rounded-md mb-2">
-        <button onclick="addParticipant()" class="w-full bg-green-500 text-white p-2 rounded-md mb-4">Add Participant</button>
+        
+        <!-- Add People Section -->
+        <div class="mb-4">
+            <input id="personName" type="text" placeholder="Enter Name" class="w-full border p-2 rounded-md">
+            <button onclick="addPerson()" class="w-full bg-blue-500 text-white p-2 rounded-md mt-2">Add Person</button>
+        </div>
 
-        <input id="expenseAmount" type="number" placeholder="Enter Expense Amount"
-               class="w-full border p-2 rounded-md mb-2">
-        <button onclick="addExpense()" class="w-full bg-blue-500 text-white p-2 rounded-md">Add Expense</button>
+        <!-- Display Added People -->
+        <div class="bg-gray-200 p-4 rounded-lg mb-4">
+            <h2 class="text-lg font-semibold mb-2">People in this Group:</h2>
+            <ul id="peopleList" class="space-y-2"></ul>
+        </div>
+
+        <!-- Add Expenses Section -->
+        <div>
+            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount" class="w-full border p-2 rounded-md">
+            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add Expense</button>
+        </div>
+
+        <!-- Display Total Split -->
+        <div class="mt-4 bg-yellow-100 p-4 rounded-lg">
+            <h2 class="text-lg font-semibold">Expense Split:</h2>
+            <ul id="expenseList" class="space-y-2"></ul>
+        </div>
     </div>
 
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mt-6">
-        <h2 class="text-xl font-bold mb-4 text-center">Expense Breakdown</h2>
-        <ul id="expenseList" class="space-y-2"></ul>
+    <div class="mt-6">
+        <a href="groups.html" class="text-blue-600 underline">Back to Groups</a>
     </div>
 
     <script src="./js/group.js"></script>

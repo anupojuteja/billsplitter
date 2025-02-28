@@ -1,52 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const groupName = urlParams.get("name");
-    document.getElementById("groupTitle").innerText = `Group: ${groupName}`;
+    let params = new URLSearchParams(window.location.search);
+    let groupName = params.get("name");
+    document.getElementById("groupTitle").innerText = `${groupName} Expenses`;
+
+    loadPeople(groupName);
     loadExpenses(groupName);
 });
 
-function addParticipant() {
-    let groupName = document.getElementById("groupTitle").innerText.split(": ")[1];
-    let participant = document.getElementById("participantName").value.trim();
+function addPerson() {
+    let personName = document.getElementById("personName").value.trim();
+    if (!personName) return alert("Enter a valid name");
+
+    let groupName = new URLSearchParams(window.location.search).get("name");
+    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
     
-    if (!participant) return alert("Enter a valid name");
-    
-    let participants = JSON.parse(localStorage.getItem(`${groupName}_participants`)) || [];
-    if (!participants.includes(participant)) {
-        participants.push(participant);
-        localStorage.setItem(`${groupName}_participants`, JSON.stringify(participants));
+    if (!groups[groupName]) groups[groupName] = { people: [], expenses: [] };
+
+    if (!groups[groupName].people.includes(personName)) {
+        groups[groupName].people.push(personName);
+        localStorage.setItem("groupsData", JSON.stringify(groups));
+        loadPeople(groupName);
     }
+    document.getElementById("personName").value = "";
+}
+
+function loadPeople(groupName) {
+    let peopleList = document.getElementById("peopleList");
+    peopleList.innerHTML = "";
+
+    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
+    let people = groups[groupName]?.people || [];
+
+    people.forEach(person => {
+        let li = document.createElement("li");
+        li.classList = "bg-white p-2 rounded-md shadow-sm";
+        li.innerText = person;
+        peopleList.appendChild(li);
+    });
 }
 
 function addExpense() {
-    let groupName = document.getElementById("groupTitle").innerText.split(": ")[1];
     let amount = parseFloat(document.getElementById("expenseAmount").value);
+    if (isNaN(amount) || amount <= 0) return alert("Enter a valid expense amount");
+
+    let groupName = new URLSearchParams(window.location.search).get("name");
+    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
     
-    if (amount <= 0) return alert("Enter a valid expense amount");
+    if (!groups[groupName] || !groups[groupName].people.length) {
+        return alert("Add at least one person to split the expense.");
+    }
 
-    let expenses = JSON.parse(localStorage.getItem(`${groupName}_expenses`)) || [];
-    expenses.push(amount);
-    localStorage.setItem(`${groupName}_expenses`, JSON.stringify(expenses));
-
+    groups[groupName].expenses.push(amount);
+    localStorage.setItem("groupsData", JSON.stringify(groups));
     loadExpenses(groupName);
+    document.getElementById("expenseAmount").value = "";
 }
 
 function loadExpenses(groupName) {
     let expenseList = document.getElementById("expenseList");
     expenseList.innerHTML = "";
 
-    let expenses = JSON.parse(localStorage.getItem(`${groupName}_expenses`)) || [];
-    let participants = JSON.parse(localStorage.getItem(`${groupName}_participants`)) || [];
+    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
+    let expenses = groups[groupName]?.expenses || [];
+    let people = groups[groupName]?.people || [];
 
-    if (expenses.length === 0 || participants.length === 0) return;
+    let totalExpense = expenses.reduce((sum, val) => sum + val, 0);
+    let perPersonShare = people.length ? (totalExpense / people.length).toFixed(2) : 0;
 
-    let total = expenses.reduce((acc, val) => acc + val, 0);
-    let perPerson = total / participants.length;
-
-    participants.forEach(person => {
-        let li = document.createElement("li");
-        li.classList = "p-2 bg-gray-200 rounded-md";
-        li.innerText = `${person} owes ${perPerson.toFixed(2)}`;
-        expenseList.appendChild(li);
-    });
+    let li = document.createElement("li");
+    li.classList = "bg-white p-2 rounded-md shadow-sm";
+    li.innerHTML = `<strong>Total Expense:</strong> $${totalExpense} <br> <strong>Each Person Pays:</strong> $${perPersonShare}`;
+    expenseList.appendChild(li);
 }
