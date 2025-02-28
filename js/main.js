@@ -1,0 +1,36 @@
+document.addEventListener("DOMContentLoaded", loadGroups);
+
+function createGroup() {
+    let groupName = document.getElementById("groupName").value.trim();
+    if (!groupName) return alert("Enter a valid group name");
+
+    let groups = JSON.parse(localStorage.getItem("groups")) || [];
+    if (!groups.includes(groupName)) {
+        groups.push(groupName);
+        localStorage.setItem("groups", JSON.stringify(groups));
+        loadGroups();
+    }
+}
+
+function loadGroups() {
+    let groupList = document.getElementById("groupList");
+    groupList.innerHTML = "";
+    
+    let groups = JSON.parse(localStorage.getItem("groups")) || [];
+    groups.forEach(group => {
+        let li = document.createElement("li");
+        li.classList = "flex justify-between p-2 bg-gray-200 rounded-md";
+        li.innerHTML = `
+            <a href="group.html?name=${encodeURIComponent(group)}" class="text-blue-600">${group}</a>
+            <button onclick="deleteGroup('${group}')" class="text-red-500">Delete</button>
+        `;
+        groupList.appendChild(li);
+    });
+}
+
+function deleteGroup(groupName) {
+    let groups = JSON.parse(localStorage.getItem("groups")) || [];
+    let updatedGroups = groups.filter(group => group !== groupName);
+    localStorage.setItem("groups", JSON.stringify(updatedGroups));
+    loadGroups();
+}

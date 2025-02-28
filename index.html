@@ -1,41 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bill</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Bill Splitter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styling/style.css">
 </head>
+<body class="bg-gray-100 flex flex-col items-center p-6">
 
-<body>
-    <script src="app.js"></script>
-
-    <h1>Bill Splitter</h1>
-
-    <!-- Group Creation -->
-    <div>
-        <input type="text" id="groupName" placeholder="Enter group name">
-        <button onclick="createGroup()">Create Group</button>
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Bill Splitter</h1>
+        <input id="groupName" type="text" placeholder="Enter Group Name" 
+               class="w-full border p-2 rounded-md mb-4">
+        <button onclick="createGroup()" class="w-full bg-blue-500 text-white p-2 rounded-md">Create Group</button>
     </div>
 
-    <!-- Member Management -->
-    <div>
-        <input type="text" id="memberName" placeholder="Enter member name">
-        <button onclick="addMember()">Add Member</button>
-        <button onclick="removeMember()">Remove Member</button>
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mt-6">
+        <h2 class="text-xl font-bold mb-4 text-center">Your Groups</h2>
+        <ul id="groupList" class="space-y-2"></ul>
     </div>
 
-    <!-- Expense Input -->
-    <div>
-        <input type="number" id="expenseAmount" placeholder="Enter amount">
-        <select id="payer"></select>
-        <button onclick="addExpense()">Add Expense</button>
-    </div>
-
-    <!-- Balance Sheet -->
-    <h2>Balance Sheet</h2>
-    <ul id="balanceList"></ul>
+    <script src="./js/main.js"></script>
 </body>
-
 </html>

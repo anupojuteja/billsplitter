@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Expenses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center p-6">
+
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center"></h1>
+        <input id="participantName" type="text" placeholder="Enter Participant Name" 
+               class="w-full border p-2 rounded-md mb-2">
+        <button onclick="addParticipant()" class="w-full bg-green-500 text-white p-2 rounded-md mb-4">Add Participant</button>
+
+        <input id="expenseAmount" type="number" placeholder="Enter Expense Amount"
+               class="w-full border p-2 rounded-md mb-2">
+        <button onclick="addExpense()" class="w-full bg-blue-500 text-white p-2 rounded-md">Add Expense</button>
+    </div>
+
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mt-6">
+        <h2 class="text-xl font-bold mb-4 text-center">Expense Breakdown</h2>
+        <ul id="expenseList" class="space-y-2"></ul>
+    </div>
+
+    <script src="./js/group.js"></script>
+</body>
+</html>

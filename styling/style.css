@@ -51,3 +51,18 @@ li {
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
+
+#memberList {
+    margin-top: 20px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.member-item {
+    padding: 8px;
+    margin: 5px 0;
+    background: #e3e3e3;
+    border-radius: 5px;
+}
