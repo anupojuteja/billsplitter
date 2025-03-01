@@ -85,3 +85,5 @@ function loadExpenses(groupName) {
     li.innerHTML = `<strong>Total Expense:</strong> $${totalExpense} <br> <strong>Each Person Pays:</strong> $${perPersonShare}`;
     expenseList.appendChild(li);
 }
+
+
