@@ -33,10 +33,23 @@ function loadPeople(groupName) {
 
     people.forEach(person => {
         let li = document.createElement("li");
-        li.classList = "bg-white p-2 rounded-md shadow-sm";
-        li.innerText = person;
+        li.classList = "flex justify-between bg-white p-2 rounded-md shadow-sm";
+        li.innerHTML = `
+            <span>${person}</span>
+            <button onclick="removePerson('${groupName}', '${person}')" class="bg-red-500 text-white px-3 py-1 rounded-md">❌</button>
+        `;
         peopleList.appendChild(li);
     });
+}
+
+function removePerson(groupName, personName) {
+    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
+    
+    if (groups[groupName]) {
+        groups[groupName].people = groups[groupName].people.filter(person => person !== personName);
+        localStorage.setItem("groupsData", JSON.stringify(groups));
+        loadPeople(groupName);
+    }
 }
 
 function addExpense() {

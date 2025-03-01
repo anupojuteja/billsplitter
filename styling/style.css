@@ -29,10 +29,25 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 button:hover {
     background-color: #218838;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #1e7e34;
+    transform: scale(0.95);
 }
 
 h1, h2 {
@@ -50,6 +65,9 @@ li {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #memberList {
@@ -65,4 +83,39 @@ li {
     margin: 5px 0;
     background: #e3e3e3;
     border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.delete-btn::after {
+    content: '\2716'; /* Unicode for cross symbol */
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+    transform: scale(1.1);
+}
+
+.delete-btn:active {
+    background-color: #a00000;
+    transform: scale(0.9);
 }
