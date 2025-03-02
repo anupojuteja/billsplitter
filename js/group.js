@@ -13,7 +13,7 @@ function addPerson() {
 
     let groupName = new URLSearchParams(window.location.search).get("name");
     let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-    
+
     if (!groups[groupName]) groups[groupName] = { people: [], expenses: [] };
 
     if (!groups[groupName].people.includes(personName)) {
@@ -44,7 +44,7 @@ function loadPeople(groupName) {
 
 function removePerson(groupName, personName) {
     let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-    
+
     if (groups[groupName]) {
         groups[groupName].people = groups[groupName].people.filter(person => person !== personName);
         localStorage.setItem("groupsData", JSON.stringify(groups));
@@ -58,7 +58,7 @@ function addExpense() {
 
     let groupName = new URLSearchParams(window.location.search).get("name");
     let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-    
+
     if (!groups[groupName] || !groups[groupName].people.length) {
         return alert("Add at least one person to split the expense.");
     }
@@ -87,3 +87,4 @@ function loadExpenses(groupName) {
 }
 
 
+//   adding names before pay

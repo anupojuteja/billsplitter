@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Group Expenses</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex flex-col items-center p-6">
 
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
         <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center"></h1>
-        
+
         <!-- Add People Section -->
         <div class="mb-4">
             <input id="personName" type="text" placeholder="Enter Name" class="w-full border p-2 rounded-md">
@@ -25,10 +27,12 @@
 
         <!-- Add Expenses Section -->
         <div>
-            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount" class="w-full border p-2 rounded-md">
-            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add Expense</button>
+            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount"
+                class="w-full border p-2 rounded-md">
+            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add
+                Expense</button>
         </div>
-       
+
 
         <!-- Display Total Split -->
         <div class="mt-4 bg-yellow-100 p-4 rounded-lg">
@@ -43,4 +47,5 @@
 
     <script src="./js/group.js"></script>
 </body>
+
 </html>
