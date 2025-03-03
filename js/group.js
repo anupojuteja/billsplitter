@@ -1,90 +1,99 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let params = new URLSearchParams(window.location.search);
-    let groupName = params.get("name");
-    document.getElementById("groupTitle").innerText = `${groupName} Expenses`;
-
-    loadPeople(groupName);
-    loadExpenses(groupName);
+document.addEventListener("DOMContentLoaded", function () {
+    loadGroupData();
+    updatePeopleList();
 });
 
-function addPerson() {
-    let personName = document.getElementById("personName").value.trim();
-    if (!personName) return alert("Enter a valid name");
-
-    let groupName = new URLSearchParams(window.location.search).get("name");
-    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-
-    if (!groups[groupName]) groups[groupName] = { people: [], expenses: [] };
-
-    if (!groups[groupName].people.includes(personName)) {
-        groups[groupName].people.push(personName);
-        localStorage.setItem("groupsData", JSON.stringify(groups));
-        loadPeople(groupName);
-    }
-    document.getElementById("personName").value = "";
+// Function to load group title from local storage
+function loadGroupData() {
+    const groupName = localStorage.getItem("selectedGroup") || "Group Expenses";
+    document.getElementById("groupTitle").innerText = groupName;
 }
 
-function loadPeople(groupName) {
-    let peopleList = document.getElementById("peopleList");
-    peopleList.innerHTML = "";
+// Function to add a person to the group
+function addPerson() {
+    const personName = document.getElementById("personName").value.trim();
+    if (personName === "") {
+        alert("Please enter a name.");
+        return;
+    }
 
-    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-    let people = groups[groupName]?.people || [];
+    let people = JSON.parse(localStorage.getItem("groupMembers")) || [];
+    people.push(personName);
+    localStorage.setItem("groupMembers", JSON.stringify(people));
 
-    people.forEach(person => {
-        let li = document.createElement("li");
-        li.classList = "flex justify-between bg-white p-2 rounded-md shadow-sm";
-        li.innerHTML = `
+    document.getElementById("personName").value = "";
+    updatePeopleList();
+}
+
+// Function to update the displayed list of people
+function updatePeopleList() {
+    const people = JSON.parse(localStorage.getItem("groupMembers")) || [];
+    const peopleList = document.getElementById("peopleList");
+
+    peopleList.innerHTML = ""; // Clear the list
+
+    people.forEach((person, index) => {
+        const listItem = document.createElement("li");
+        listItem.className = "flex justify-between items-center bg-white p-2 rounded shadow-md";
+
+        listItem.innerHTML = `
             <span>${person}</span>
-            <button onclick="removePerson('${groupName}', '${person}')" class="bg-red-500 text-white px-3 py-1 rounded-md">❌</button>
+            <button class="delete-btn text-red-500 hover:text-red-700 font-bold" onclick="removePerson(${index})">❌</button>
         `;
-        peopleList.appendChild(li);
+
+        peopleList.appendChild(listItem);
     });
 }
 
-function removePerson(groupName, personName) {
-    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-
-    if (groups[groupName]) {
-        groups[groupName].people = groups[groupName].people.filter(person => person !== personName);
-        localStorage.setItem("groupsData", JSON.stringify(groups));
-        loadPeople(groupName);
-    }
+// Function to remove a person from the group
+function removePerson(index) {
+    let people = JSON.parse(localStorage.getItem("groupMembers")) || [];
+    people.splice(index, 1);
+    localStorage.setItem("groupMembers", JSON.stringify(people));
+    updatePeopleList();
 }
 
+// Function to add an expense and split it
 function addExpense() {
-    let amount = parseFloat(document.getElementById("expenseAmount").value);
-    if (isNaN(amount) || amount <= 0) return alert("Enter a valid expense amount");
-
-    let groupName = new URLSearchParams(window.location.search).get("name");
-    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-
-    if (!groups[groupName] || !groups[groupName].people.length) {
-        return alert("Add at least one person to split the expense.");
+    const expenseAmount = parseFloat(document.getElementById("expenseAmount").value);
+    if (isNaN(expenseAmount) || expenseAmount <= 0) {
+        alert("Please enter a valid expense amount.");
+        return;
     }
 
-    groups[groupName].expenses.push(amount);
-    localStorage.setItem("groupsData", JSON.stringify(groups));
-    loadExpenses(groupName);
+    const people = JSON.parse(localStorage.getItem("groupMembers")) || [];
+    if (people.length === 0) {
+        alert("Add people to split the expense.");
+        return;
+    }
+
+    const splitAmount = (expenseAmount / people.length).toFixed(2);
+    localStorage.setItem("totalExpense", expenseAmount);
+    updateExpenseList(people, splitAmount);
+
     document.getElementById("expenseAmount").value = "";
 }
 
-function loadExpenses(groupName) {
-    let expenseList = document.getElementById("expenseList");
+// Function to update the displayed split expenses
+function updateExpenseList(people, splitAmount) {
+    const expenseList = document.getElementById("expenseList");
     expenseList.innerHTML = "";
 
-    let groups = JSON.parse(localStorage.getItem("groupsData")) || {};
-    let expenses = groups[groupName]?.expenses || [];
-    let people = groups[groupName]?.people || [];
+    people.forEach(person => {
+        const listItem = document.createElement("li");
+        listItem.className = "flex justify-between items-center bg-white p-2 rounded shadow-md";
 
-    let totalExpense = expenses.reduce((sum, val) => sum + val, 0);
-    let perPersonShare = people.length ? (totalExpense / people.length).toFixed(2) : 0;
+        listItem.innerHTML = `
+            <span>${person} owes: $${splitAmount}</span>
+            <button class="pay-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 active:bg-blue-700" onclick="payAmount('${person}')">Pay</button>
+        `;
 
-    let li = document.createElement("li");
-    li.classList = "bg-white p-2 rounded-md shadow-sm";
-    li.innerHTML = `<strong>Total Expense:</strong> $${totalExpense} <br> <strong>Each Person Pays:</strong> $${perPersonShare}`;
-    expenseList.appendChild(li);
+        expenseList.appendChild(listItem);
+    });
 }
 
-
-//   adding names before pay
+// Function to handle payment
+function payAmount(person) {
+    alert(`${person} has paid their share!`);
+    // Future enhancement: Track who has paid
+}

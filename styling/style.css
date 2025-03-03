@@ -89,7 +89,7 @@ li {
 }
 
 .delete-btn {
-    background-color: red;
+    background-color: rgb(0, 255, 55);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -111,11 +111,11 @@ li {
 }
 
 .delete-btn:hover {
-    background-color: darkred;
+    background-color: rgb(40, 95, 62);
     transform: scale(1.1);
 }
 
 .delete-btn:active {
-    background-color: #a00000;
+    background-color: #295f43;
     transform: scale(0.9);
 }
