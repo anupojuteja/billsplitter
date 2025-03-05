@@ -167,12 +167,15 @@ function loadExpenseHistory() {
 // Function to toggle history visibility
 function toggleHistory() {
     const historySection = document.getElementById("historySection");
+    const historyButton = document.querySelector("button[onclick='toggleHistory()']");
 
     if (historySection.classList.contains("hidden")) {
-        loadExpenseHistory(); // Load history only when opening
+        loadExpenseHistory(); // Load history when opening
         historySection.classList.remove("hidden");
+        historyButton.textContent = "Hide History"; // Change button text
     } else {
         historySection.classList.add("hidden");
+        historyButton.textContent = "View History"; // Revert button text
     }
 }
 
