@@ -164,3 +164,40 @@ function loadExpenseHistory() {
         historyContainer.appendChild(historyItem);
     });
 }
+// Function to toggle history visibility
+function toggleHistory() {
+    const historySection = document.getElementById("historySection");
+
+    if (historySection.classList.contains("hidden")) {
+        loadExpenseHistory(); // Load history only when opening
+        historySection.classList.remove("hidden");
+    } else {
+        historySection.classList.add("hidden");
+    }
+}
+
+// Function to load and display history
+function loadExpenseHistory() {
+    let history = JSON.parse(localStorage.getItem("expenseHistory")) || [];
+    const historyContainer = document.getElementById("historyList");
+    historyContainer.innerHTML = "";
+
+    if (history.length === 0) {
+        historyContainer.innerHTML = "<p class='text-gray-600 text-center'>No payment history available.</p>";
+        return;
+    }
+
+    history.forEach((entry) => {
+        const historyItem = document.createElement("div");
+        historyItem.className = "bg-gray-100 p-2 rounded shadow-md mb-2";
+
+        let paymentDetails = entry.payments.map(p => `${p.person} - ${p.paid ? 'Paid' : 'Unpaid'}`).join(", ");
+
+        historyItem.innerHTML = `
+            <p class="text-sm font-semibold">Date: ${entry.date}</p>
+            <p class="text-sm">${paymentDetails}</p>
+        `;
+
+        historyContainer.appendChild(historyItem);
+    });
+}
