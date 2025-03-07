@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,40 @@
 
     <div class="mt-6">
         <a href="index.html" class="text-blue-600 underline">Create New Group</a>
+    </div>
+
+    <script src="./js/groups.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Groups</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center p-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-center mb-4 animate-fadeIn">Your Groups</h1>
+
+        <!-- Create Group Section -->
+        <div class="mb-4">
+            <input id="groupName" type="text" placeholder="Enter Group Name"
+                class="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-400 transition-all">
+            <button onclick="createGroup()"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md mt-2 transition-all transform hover:scale-105">
+                Create Group
+            </button>
+        </div>
+
+        <!-- Groups List -->
+        <div id="groupList" class="mt-4 space-y-3">
+            <!-- Groups will be inserted here dynamically -->
+        </div>
     </div>
 
     <script src="./js/groups.js"></script>

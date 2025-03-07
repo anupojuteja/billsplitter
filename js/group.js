@@ -1,206 +1,159 @@
-document.addEventListener("DOMContentLoaded", function () {
-    loadGroupData();
-    updatePeopleList();
-    loadExpenseHistory();
-});
+let people = JSON.parse(localStorage.getItem("groupPeople")) || [];
 
-// Function to load group title from local storage
-function loadGroupData() {
-    const groupName = localStorage.getItem("selectedGroup") || "Group Expenses";
-    document.getElementById("groupTitle").innerText = groupName;
+// Function to update the "Paid By" dropdown
+function updatePaidByDropdown() {
+    const dropdown = document.getElementById("paidBy");
+    dropdown.innerHTML = '<option value="">Select who paid</option>';
+
+    people.forEach(person => {
+        const option = document.createElement("option");
+        option.value = person;
+        option.textContent = person;
+        dropdown.appendChild(option);
+    });
 }
 
-// Function to add a person to the group
+// Function to add a person and update the dropdown
 function addPerson() {
-    const personName = document.getElementById("personName").value.trim();
-    if (personName === "") {
-        alert("Please enter a name.");
-        return;
-    }
+    const name = document.getElementById("personName").value.trim();
+    if (!name) return;
 
-    let people = JSON.parse(localStorage.getItem("groupMembers")) || [];
-    people.push(personName);
-    localStorage.setItem("groupMembers", JSON.stringify(people));
+    people.push(name);
+    localStorage.setItem("groupPeople", JSON.stringify(people));
+    
+    displayPeople();
+    updatePaidByDropdown();
 
     document.getElementById("personName").value = "";
-    updatePeopleList();
 }
 
-// Function to update the displayed list of people
-function updatePeopleList() {
-    const people = JSON.parse(localStorage.getItem("groupMembers")) || [];
+// Function to display the added people with remove buttons
+function displayPeople() {
     const peopleList = document.getElementById("peopleList");
+    peopleList.innerHTML = "";
 
-    peopleList.innerHTML = ""; // Clear the list
-
-    people.forEach((person, index) => {
+    people.forEach(person => {
         const listItem = document.createElement("li");
-        listItem.className = "flex justify-between items-center bg-white p-2 rounded shadow-md";
+        listItem.className = "flex justify-between bg-white px-2  rounded-md shadow";
 
         listItem.innerHTML = `
             <span>${person}</span>
-            <button class="delete-btn text-red-500 hover:text-red-700 font-bold" onclick="removePerson(${index})">❌</button>
+            <button class="bg-red-500 text-white px-5 py-1 rounded-md " onclick="removePerson('${person}')">X</button>
         `;
-
         peopleList.appendChild(listItem);
     });
 }
 
-// Function to remove a person from the group
-function removePerson(index) {
-    let people = JSON.parse(localStorage.getItem("groupMembers")) || [];
-    people.splice(index, 1);
-    localStorage.setItem("groupMembers", JSON.stringify(people));
-    updatePeopleList();
+// Function to remove a person
+function removePerson(name) {
+    people = people.filter(person => person !== name);
+    localStorage.setItem("groupPeople", JSON.stringify(people));
+    displayPeople();
+    updatePaidByDropdown();
 }
 
-// Function to add an expense and split it
+// Function to add an expense
 function addExpense() {
-    const expenseAmount = parseFloat(document.getElementById("expenseAmount").value);
-    if (isNaN(expenseAmount) || expenseAmount <= 0) {
-        alert("Please enter a valid expense amount.");
+    const amount = parseFloat(document.getElementById("expenseAmount").value);
+    const paidBy = document.getElementById("paidBy").value;
+
+    if (!amount || !paidBy) {
+        alert("Enter a valid amount and select who paid.");
         return;
     }
 
-    const people = JSON.parse(localStorage.getItem("groupMembers")) || [];
-    if (people.length === 0) {
-        alert("Add people to split the expense.");
-        return;
-    }
+    const eachShare = amount / people.length;
+    let balances = JSON.parse(localStorage.getItem("balances")) || {};
+    
+    // Update balances
+    people.forEach(person => {
+        if (person === paidBy) {
+            balances[person] = (balances[person] || 0) - amount + eachShare;
+        } else {
+            balances[person] = (balances[person] || 0) + eachShare;
+        }
+    });
 
-    const splitAmount = (expenseAmount / people.length).toFixed(2);
-    localStorage.setItem("totalExpense", expenseAmount);
-    localStorage.setItem("payments", JSON.stringify(people.map(person => ({ person, paid: false }))));
-    updateExpenseList();
-    document.getElementById("expenseAmount").value = "";
+    localStorage.setItem("balances", JSON.stringify(balances));
+    saveToHistory(paidBy, amount);
+    displayExpenseSplit();
 }
 
-// Function to update the displayed split expenses
-function updateExpenseList() {
+// Function to display how much each person has to pay
+function displayExpenseSplit() {
     const expenseList = document.getElementById("expenseList");
-    const payments = JSON.parse(localStorage.getItem("payments")) || [];
-
     expenseList.innerHTML = "";
 
-    payments.forEach((entry, index) => {
-        const listItem = document.createElement("li");
-        listItem.className = "flex justify-between items-center bg-white p-2 rounded shadow-md";
+    const balances = JSON.parse(localStorage.getItem("balances")) || {};
 
-        listItem.innerHTML = `
-            <span>${entry.person} owes: $${(localStorage.getItem("totalExpense") / payments.length).toFixed(2)}</span>
-            <button id="pay-btn-${index}" class="pay-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 active:bg-blue-700" 
-                onclick="payAmount(${index})">${entry.paid ? "Paid" : "Pay"}</button>
-        `;
-
-        expenseList.appendChild(listItem);
+    Object.keys(balances).forEach(person => {
+        if (balances[person] > 0) {
+            const listItem = document.createElement("li");
+            listItem.className = "flex justify-between bg-gray-100 p-2 rounded-md";
+            listItem.innerHTML = `
+                <span>${person} needs to pay: $${balances[person].toFixed(2)}</span>
+                <button class="bg-blue-500 text-white px-3 py-1 rounded-md" onclick="markAsPaid('${person}')">Pay</button>
+            `;
+            expenseList.appendChild(listItem);
+        }
     });
+}
 
+// Function to mark a person as paid
+function markAsPaid(person) {
+    let balances = JSON.parse(localStorage.getItem("balances")) || {};
+
+    if (balances[person]) {
+        balances[person] = 0;
+    }
+
+    localStorage.setItem("balances", JSON.stringify(balances));
+    displayExpenseSplit();
     checkAllPaid();
 }
 
-// Function to handle payment
-function payAmount(index) {
-    let payments = JSON.parse(localStorage.getItem("payments")) || [];
-    payments[index].paid = true;
-    localStorage.setItem("payments", JSON.stringify(payments));
-    document.getElementById(`pay-btn-${index}`).innerText = "Paid";
-    checkAllPaid();
-}
-
-// Function to check if all people have paid
+// Function to check if all have paid and reset expenses
 function checkAllPaid() {
-    let payments = JSON.parse(localStorage.getItem("payments")) || [];
-    if (payments.length > 0 && payments.every(entry => entry.paid)) {
+    const balances = JSON.parse(localStorage.getItem("balances")) || {};
+    if (Object.values(balances).every(balance => balance === 0)) {
         alert("All people have paid!");
-        saveToHistory();
-        resetExpenses();
+        localStorage.removeItem("balances");
+        displayExpenseSplit();
     }
 }
 
-// Function to reset expenses after payment
-function resetExpenses() {
-    localStorage.removeItem("totalExpense");
-    localStorage.removeItem("payments");
-    document.getElementById("expenseList").innerHTML = "<p class='text-center text-gray-600'>No pending expenses.</p>";
+// Function to save expenses to history
+function saveToHistory(paidBy, amount) {
+    let history = JSON.parse(localStorage.getItem("paymentHistory")) || [];
+    history.push({ paidBy, amount, date: new Date().toLocaleString() });
+    localStorage.setItem("paymentHistory", JSON.stringify(history));
 }
 
-// Function to save payment history
-function saveToHistory() {
-    let payments = JSON.parse(localStorage.getItem("payments")) || [];
-    let history = JSON.parse(localStorage.getItem("expenseHistory")) || [];
-    let date = new Date().toLocaleString();
-
-    history.push({
-        date,
-        payments
-    });
-
-    localStorage.setItem("expenseHistory", JSON.stringify(history));
-    loadExpenseHistory();
-}
-
-// Function to load and display history
-function loadExpenseHistory() {
-    let history = JSON.parse(localStorage.getItem("expenseHistory")) || [];
-    const historyContainer = document.getElementById("historyList");
-    historyContainer.innerHTML = "";
-
-    if (history.length === 0) {
-        historyContainer.innerHTML = "<p class='text-gray-600 text-center'>No payment history available.</p>";
-        return;
-    }
-
-    history.forEach((entry, index) => {
-        const historyItem = document.createElement("div");
-        historyItem.className = "bg-gray-100 p-2 rounded shadow-md mb-2";
-
-        let paymentDetails = entry.payments.map(p => `${p.person} - ${p.paid ? 'Paid' : 'Unpaid'}`).join(", ");
-
-        historyItem.innerHTML = `
-            <p class="text-sm font-semibold">Date: ${entry.date}</p>
-            <p class="text-sm">${paymentDetails}</p>
-        `;
-
-        historyContainer.appendChild(historyItem);
-    });
-}
 // Function to toggle history visibility
 function toggleHistory() {
     const historySection = document.getElementById("historySection");
-    const historyButton = document.querySelector("button[onclick='toggleHistory()']");
+    historySection.classList.toggle("hidden");
 
-    if (historySection.classList.contains("hidden")) {
-        loadExpenseHistory(); // Load history when opening
-        historySection.classList.remove("hidden");
-        historyButton.textContent = "Hide History"; // Change button text
-    } else {
-        historySection.classList.add("hidden");
-        historyButton.textContent = "View History"; // Revert button text
-    }
+    document.querySelector("button[onclick='toggleHistory()']").textContent =
+        historySection.classList.contains("hidden") ? "View History" : "Hide History";
+
+    if (!historySection.classList.contains("hidden")) loadExpenseHistory();
 }
 
-// Function to load and display history
+// Function to load and display payment history
 function loadExpenseHistory() {
-    let history = JSON.parse(localStorage.getItem("expenseHistory")) || [];
-    const historyContainer = document.getElementById("historyList");
-    historyContainer.innerHTML = "";
+    const historyList = document.getElementById("historyList");
+    historyList.innerHTML = "";
 
-    if (history.length === 0) {
-        historyContainer.innerHTML = "<p class='text-gray-600 text-center'>No payment history available.</p>";
-        return;
-    }
-
-    history.forEach((entry) => {
-        const historyItem = document.createElement("div");
-        historyItem.className = "bg-gray-100 p-2 rounded shadow-md mb-2";
-
-        let paymentDetails = entry.payments.map(p => `${p.person} - ${p.paid ? 'Paid' : 'Unpaid'}`).join(", ");
-
-        historyItem.innerHTML = `
-            <p class="text-sm font-semibold">Date: ${entry.date}</p>
-            <p class="text-sm">${paymentDetails}</p>
-        `;
-
-        historyContainer.appendChild(historyItem);
+    const history = JSON.parse(localStorage.getItem("paymentHistory")) || [];
+    history.forEach(entry => {
+        historyList.innerHTML += `<li>${entry.paidBy} paid $${entry.amount} on ${entry.date}</li>`;
     });
 }
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+    displayPeople();
+    updatePaidByDropdown();
+    displayExpenseSplit();
+});

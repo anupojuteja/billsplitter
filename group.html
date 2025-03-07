@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Group Expenses</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styling/style.css">
 </head>
 
 <body class="bg-gray-100 flex flex-col items-center p-6">
-
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
-        <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center"></h1>
+        <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center">Room Expenses</h1>
 
         <!-- Add People Section -->
         <div class="mb-4">
@@ -20,51 +19,42 @@
         </div>
 
         <!-- Display Added People with Remove Option -->
-        <div class="bg-gray-200 p-4 rounded-lg mb-44">
+        <div class="bg-gray-200 p-4 rounded-lg mb-4">
             <h2 class="text-lg font-semibold mb-2">People in this Group:</h2>
             <ul id="peopleList" class="space-y-2"></ul>
         </div>
 
         <!-- Add Expenses Section -->
         <div>
-            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount"
-                class="w-full border p-2 rounded-md">
-            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add
-                Expense</button>
+            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount" class="w-full border p-2 rounded-md">
+            <select id="paidBy" class="w-full border p-2 rounded-md mt-2">
+                <option value="">Select who paid</option>
+            </select>
+            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add Expense</button>
         </div>
 
-
-        <!-- Display Total Split -->
+        <!-- Display Expense Split -->
         <div class="mt-4 bg-yellow-100 p-4 rounded-lg">
             <h2 class="text-lg font-semibold">Expense Split:</h2>
             <ul id="expenseList" class="space-y-2"></ul>
         </div>
+
+        <!-- History Button -->
+        <button onclick="toggleHistory()" class="w-full bg-purple-500 text-white p-2 rounded-md mt-2">
+            View History
+        </button>
+
+        <!-- Expense History Section (Initially Hidden) -->
+        <div id="historySection" class="mt-4 bg-gray-300 p-4 rounded-lg hidden">
+            <h2 class="text-lg font-semibold">Payment History:</h2>
+            <ul id="historyList" class="space-y-2"></ul>
+        </div>
     </div>
-
-    <!-- Payment History Section -->
-<!-- <div class="mt-4 bg-gray-200 p-4 rounded-lg">
-    <h2 class="text-lg font-semibold">Payment History:</h2>
-    <div id="historyList" class="space-y-2"></div>
-</div> -->
-
-<!-- History Button -->
-<!-- <button onclick="loadExpenseHistory()" class="w-half bg-purple-500 text-white p-2 rounded-md mt-2">View History</button>
-
 
     <div class="mt-6">
         <a href="groups.html" class="text-blue-600 underline">Back to Groups</a>
-    </div> -->
-<!-- Payment History Section (Initially Hidden) -->
-<div id="historySection" class="mt-4 bg-gray-200 p-4 rounded-lg hidden">
-    <h2 class="text-lg font-semibold">Payment History:</h2>
-    <div id="historyList" class="space-y-2"></div>
-</div>
-
-<!-- History Button -->
-<button onclick="toggleHistory()" class="w-half bg-purple-500 text-white p-2 rounded-md mt-2">View History</button>
-
+    </div>
 
     <script src="./js/group.js"></script>
 </body>
-
 </html>
