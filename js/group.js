@@ -36,7 +36,7 @@ function renderPeopleList() {
 function updatePayerDropdown() {
     const payerSelect = document.getElementById("payerSelect");
     payerSelect.innerHTML = `<option value="" disabled selected>Select who paid</option>`;
-    
+
     people.forEach(person => {
         const option = document.createElement("option");
         option.value = person;
