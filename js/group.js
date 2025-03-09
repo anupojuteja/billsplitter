@@ -28,21 +28,19 @@ function addPerson() {
 }
 
 // Function to display the added people with remove buttons
-function displayPeople() {
-    const peopleList = document.getElementById("peopleList");
-    peopleList.innerHTML = "";
+people.forEach(person => {
+    const listItem = document.createElement("li");
+    listItem.className = "bg-white flex justify-between items-center px-4 py-2 rounded-md shadow";
 
-    people.forEach(person => {
-        const listItem = document.createElement("li");
-        listItem.className = "flex justify-between bg-white px-2  rounded-md shadow";
+    listItem.innerHTML = `
+        <span class="text-gray-700 flex-grow">${person}</span>
+        <button class="bg-red-500 text-white text-xs px-2 py-1 rounded-full hover:bg-red-600 transition ml-3"
+            onclick="removePerson('${person}')">✖</button>
+    `;
 
-        listItem.innerHTML = `
-            <span>${person}</span>
-            <button class="bg-red-500 text-white px-5 py-1 rounded-md " onclick="removePerson('${person}')">X</button>
-        `;
-        peopleList.appendChild(listItem);
-    });
-}
+    peopleList.appendChild(listItem);
+});
+
 
 // Function to remove a person
 function removePerson(name) {
