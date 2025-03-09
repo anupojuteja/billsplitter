@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Group Expenses</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./styling/style.css">
 </head>
 
 <body class="bg-gray-100 flex flex-col items-center p-6">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
-        <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center">Room Expenses</h1>
+
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg animate-fadeIn">
+        <h1 id="groupTitle" class="text-2xl font-bold mb-4 text-center">Group Expenses</h1>
 
         <!-- Add People Section -->
         <div class="mb-4">
-            <input id="personName" type="text" placeholder="Enter Name" class="w-full border p-2 rounded-md">
-            <button onclick="addPerson()" class="w-full bg-blue-500 text-white p-2 rounded-md mt-2">Add Person</button>
+            <input id="personName" type="text" placeholder="Enter Name"
+                class="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-500 transition">
+            <button onclick="addPerson()"
+                class="w-full bg-blue-500 text-white p-2 rounded-md mt-2 hover:bg-blue-600 transition">Add Person</button>
         </div>
 
         <!-- Display Added People with Remove Option -->
         <div class="bg-gray-200 p-4 rounded-lg mb-4">
-            <h2 class="text-lg font-semibold mb-4">People in this Group:</h2>
+            <h2 class="text-lg font-semibold mb-2">People in this Group:</h2>
             <ul id="peopleList" class="space-y-2"></ul>
         </div>
 
         <!-- Add Expenses Section -->
-        <div>
-            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount" class="w-full border p-2 rounded-md">
-            <select id="paidBy" class="w-full border p-2 rounded-md mt-2">
-                <option value="">Select who paid</option>
+        <div class="mb-4">
+            <input id="expenseAmount" type="number" placeholder="Enter Expense Amount"
+                class="w-full border p-2 rounded-md focus:ring-2 focus:ring-green-500 transition">
+            <select id="payerSelect" class="w-full border p-2 rounded-md mt-2">
+                <option value="" disabled selected>Select who paid</option>
             </select>
-            <button onclick="addExpense()" class="w-full bg-green-500 text-white p-2 rounded-md mt-2">Add Expense</button>
+            <button onclick="addExpense()"
+                class="w-full bg-green-500 text-white p-2 rounded-md mt-2 hover:bg-green-600 transition">Add
+                Expense</button>
         </div>
 
-        <!-- Display Expense Split -->
+        <!-- Display Total Split -->
         <div class="mt-4 bg-yellow-100 p-4 rounded-lg">
             <h2 class="text-lg font-semibold">Expense Split:</h2>
             <ul id="expenseList" class="space-y-2"></ul>
         </div>
 
-        <!-- History Button -->
-        <button onclick="toggleHistory()" class="w-full bg-purple-500 text-white p-2 rounded-md mt-2">
-            View History
-        </button>
+        <!-- History Toggle Button -->
+        <div class="mt-4 text-center">
+            <button onclick="toggleHistory()"
+                class="bg-gray-700 text-white p-2 rounded-md hover:bg-gray-800 transition">View Payment History</button>
+        </div>
 
-        <!-- Expense History Section (Initially Hidden) -->
-        <div id="historySection" class="mt-4 bg-gray-300 p-4 rounded-lg hidden">
-            <h2 class="text-lg font-semibold">Payment History:</h2>
-            <ul id="historyList" class="space-y-2"></ul>
+        <!-- History Container (Hidden by Default) -->
+        <div id="historyContainer" class="hidden mt-4 bg-gray-300 p-4 rounded-lg w-full">
+            <h2 class="text-lg font-semibold mb-2">Payment History:</h2>
+            <div id="historyList" class="space-y-2"></div>
         </div>
     </div>
 
@@ -57,4 +64,5 @@
 
     <script src="./js/group.js"></script>
 </body>
+
 </html>
