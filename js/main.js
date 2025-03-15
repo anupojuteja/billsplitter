@@ -11,8 +11,8 @@ function createGroup() {
 }
 
 // adding extra functionality to the createGroup function
-function createGroup() {
-    let groupName = document.getElementById("groupName").value.trim();
-    if (!groupName) return alert("Enter a valid group name");
-    let groups = JSON.parse(localStorage.getItem("groups")) || [];
-    if (!groups.includes(groupName))
+// function createGroup() {
+//     let groupName = document.getElementById("groupName").value.trim();
+//     if (!groupName) return alert("Enter a valid group name");
+//     let groups = JSON.parse(localStorage.getItem("groups")) || [];
+//     if (!groups.includes(groupName))
